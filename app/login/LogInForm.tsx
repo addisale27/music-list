@@ -39,6 +39,7 @@ const LogInForm = () => {
       }
       if (callback?.error) {
         toast.error(callback.error);
+        setIsLoading(false);
       }
     });
   };
