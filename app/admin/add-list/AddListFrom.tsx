@@ -1,22 +1,27 @@
 "use client";
-
+import { useEffect, useState } from "react";
+import { useForm, FieldValues } from "react-hook-form";
 import Heading from "@/app/components/Heading";
 import Input from "@/app/components/Inputs/Input";
-import SelectImage from "@/app/components/Inputs/SelectImage";
 import TextArea from "@/app/components/Inputs/TextArea";
-import { ImageType } from "@/app/list/[listId]/ListDetail";
+import SelectImage from "@/app/components/Inputs/SelectImage";
 
-import { useEffect, useReducer, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
-export type LocalImageType = {
-  image: File | null;
-};
+import Button from "@/app/components/Button";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { uploadImagesToFirebase } from "@/app/utils/uploadImages";
+
 const AddListForm = () => {
   const [isLoading, setLoading] = useState(false);
-  const [images, setImages] = useState<LocalImageType[]>(null);
+  const [playListCreated, setPlayListCreated] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const router = useRouter();
   const {
     register,
-    setValue,
+
+    reset,
+    handleSubmit,
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
@@ -29,19 +34,52 @@ const AddListForm = () => {
       images: [],
     },
   });
-  const setCustomValue = (id: string, value: any) => {
-    setValue(id, value, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    });
+
+  const onSubmit = async (data: FieldValues) => {
+    setLoading(true);
+
+    try {
+      if (selectedImages.length === 0) {
+        setLoading(false);
+        return toast.error(
+          "Please upload at least one image for your playlist"
+        );
+      }
+
+      toast("Your playlist is being created, please wait...");
+
+      const imageUrls = await uploadImagesToFirebase(selectedImages);
+
+      if (imageUrls.length === 0) {
+        setLoading(false);
+        return toast.error("Something went wrong while uploading images");
+      }
+
+      const formData = { ...data, images: imageUrls };
+      console.log(formData);
+
+      await axios.post("/api/create", formData);
+
+      toast.success("Playlist created successfully!");
+      reset();
+      router.refresh();
+      setPlayListCreated(true);
+    } catch (error) {
+      console.error("Error creating playlist:", error);
+      toast.error("Unable to create playlist, please try again later");
+    } finally {
+      setLoading(false); // Ensure loading is reset even in case of failure
+    }
   };
+
   useEffect(() => {
-    setCustomValue("images", images);
-  }, [images]);
+    if (playListCreated) setSelectedImages([]);
+  }, [playListCreated]);
+
   return (
     <>
       <Heading title="Add a playlist" />
+
       <Input
         id="title"
         label="Title"
@@ -90,11 +128,31 @@ const AddListForm = () => {
         errors={errors}
         required
       />
-      <div>
+      <div className="flex flex-col gap-8 mt-4">
         <div className="font-bold text-xl">
           Insert the Image for the playlist you can have more than one image
         </div>
-        <SelectImage />
+        <SelectImage
+          onImagesSelected={(files: File[]) => {
+            setSelectedImages((prev) => {
+              if (!prev) return files;
+              return [...prev, ...files];
+            });
+          }}
+          selectedImages={selectedImages}
+          onImageCancel={(name: string) => {
+            setSelectedImages((prev) => {
+              return prev.filter((img) => img.name !== name); // Correct filtering
+            });
+          }}
+        />
+
+        <Button
+          disabled={isLoading}
+          outline
+          label={isLoading ? `Creating a list` : `Create a list`}
+          onClick={handleSubmit(onSubmit)}
+        />
       </div>
     </>
   );

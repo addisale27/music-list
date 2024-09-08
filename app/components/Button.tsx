@@ -29,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
         small
           ? `text-sm py-1 px-2 font-light border-[1px]`
           : `text-md py-3 px-4 font-semibold border-2`
-      } ${custom ? custom : ``}`}
+      } ${custom ? custom : ``} ${disabled ? `cursor-not-allowed` : ``}`}
     >
       {Icon && <Icon size={24} />}
       {label}

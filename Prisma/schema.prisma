@@ -48,22 +48,20 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 model PlayList{
-  id     String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  title String
-  artist String
-  genre String 
-  album String 
-  releasedYear String
-  description String
-  images ImageType[]
-  likes Int
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  title             String
+  artist            String
+  genre             String 
+  album              String 
+  releasedYear       String
+  description        String
+  images            String[]
+  likes             Int
  reviews Review[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-type ImageType{
-  url String
-}
+
  
  model Review{
   id     String        @id @default(auto()) @map("_id") @db.ObjectId
