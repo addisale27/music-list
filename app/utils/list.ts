@@ -4,7 +4,8 @@ export const list = {
   artist: "The Weeknd",
   album: "After Hours",
   genre: "Pop",
-
+  description:
+    "Blinding Lights is a synth-driven pop anthem by The Weeknd, blending '80s-inspired beats with modern flair.",
   releasedYear: "2021",
 
   images: [

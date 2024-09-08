@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart } from "react-icons/ai";
 
 import { truncateText } from "../utils/trancateText";
 import { useRouter } from "next/navigation";
@@ -48,7 +48,7 @@ const MusicCard: React.FC<MusicCardProps> = ({ list }) => {
             {/* //if the current user likes the list before make the heart red
           otherwiese empty heart */}
             <span className="text-2xl text-slate-400">
-              <AiOutlineHeart />
+              <AiFillHeart style={{ color: "red" }} />
             </span>
             <span>{list.likes}</span>
           </div>

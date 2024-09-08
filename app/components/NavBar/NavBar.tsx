@@ -1,8 +1,11 @@
 import { Redressed } from "next/font/google";
-import Container from "../components/Container";
+import Container from "../Container";
 import Link from "next/link";
+import UserMenu from "./UserMenu";
+import { getCurrentUser } from "@/actions/getCurrentUser";
 const redressed = Redressed({ subsets: ["latin"], weight: ["400"] });
-const NavBar = () => {
+const NavBar = async () => {
+  const currentUser = await getCurrentUser();
   return (
     <div className="bg-blue-50 sticky top-0 w-full z-30 shadow-sm">
       <div className="py-4 border-b-[1.5px]">
@@ -12,7 +15,7 @@ const NavBar = () => {
               <Link href="/">Music </Link>
             </div>
             <div className="hidden md:block">search</div>
-            <div>account</div>
+            <UserMenu currentUser={currentUser} />
           </div>
         </Container>
       </div>
