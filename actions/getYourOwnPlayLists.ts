@@ -5,6 +5,13 @@ export async function getYourOwnPlayList(id: string) {
       where: {
         userId: id,
       },
+      include: {
+        reviews: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
     if (!yourPlayList) return null;
     return yourPlayList;

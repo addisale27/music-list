@@ -34,11 +34,13 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
           <div className="absolute rounded-md shadow-md w-[170px] bg-white overflow-hidden right-0 top-12 text-sm cursor-pointer flex flex-col">
             {currentUser ? (
               <div>
-                <Link href="/orders">
-                  <MenuItem onClick={toggleOpen}>Your lists</MenuItem>
+                <Link href="/your-playLists">
+                  <MenuItem onClick={toggleOpen}>Your playlists</MenuItem>
                 </Link>
                 <Link href="/admin">
-                  <MenuItem onClick={toggleOpen}>Manage your lists</MenuItem>
+                  <MenuItem onClick={toggleOpen}>
+                    Manage your playlists
+                  </MenuItem>
                 </Link>
                 <hr />
                 <MenuItem

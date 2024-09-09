@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../components/Inputs/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Button from "../components/Button";
@@ -11,8 +11,11 @@ import Heading from "../components/Heading";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
-
-const RegisterForm = () => {
+import { SafeUser } from "@/types";
+interface RegisterFormProps {
+  currentUser: SafeUser | null;
+}
+const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -60,6 +63,17 @@ const RegisterForm = () => {
       });
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      // Redirect if the user is already logged in
+      router.push("/");
+      router.refresh();
+    }
+  }, [currentUser, router]);
+
+  if (currentUser) {
+    return <p className="text-center">Registered. Redirecting...</p>;
+  }
   return (
     <>
       <Heading title="Sign up for Music List" />

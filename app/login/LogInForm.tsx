@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Button from "../components/Button";
@@ -11,8 +11,11 @@ import Heading from "../components/Heading";
 import Input from "../components/Inputs/Input";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
-
-const LogInForm = () => {
+import { SafeUser } from "@/types";
+interface LogInFormProps {
+  currentUser: SafeUser | null;
+}
+const LogInForm: React.FC<LogInFormProps> = ({ currentUser }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -43,7 +46,16 @@ const LogInForm = () => {
       }
     });
   };
-
+  useEffect(() => {
+    if (currentUser) {
+      // Redirect if the user is already logged in
+      router.push("/");
+      router.refresh();
+    }
+  }, [currentUser, router]);
+  if (currentUser) {
+    return <p className="text-center">Logged in. Redirecting..</p>;
+  }
   return (
     <>
       <Heading title="Sign in to Music List" />
