@@ -9,7 +9,7 @@ export default async function getAllMusicLists(params: IParams) {
     const { searchTerm } = params;
 
     // Ensure searchString is always a string
-    const searchString = searchTerm ?? "";
+    const searchString: string | null = searchTerm ?? "";
 
     const playLists = await prisma.playList.findMany({
       where: {
