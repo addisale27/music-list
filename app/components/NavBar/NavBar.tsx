@@ -3,6 +3,7 @@ import Container from "../Container";
 import Link from "next/link";
 import UserMenu from "./UserMenu";
 import { getCurrentUser } from "@/actions/getCurrentUser";
+import SearchBar from "./SearchBar";
 const redressed = Redressed({ subsets: ["latin"], weight: ["400"] });
 const NavBar = async () => {
   const currentUser = await getCurrentUser();
@@ -14,7 +15,9 @@ const NavBar = async () => {
             <div className={`${redressed.className} font-semibold text-2xl`}>
               <Link href="/">Music </Link>
             </div>
-            <div className="hidden md:block">search</div>
+            <div className="hidden md:block">
+              <SearchBar />
+            </div>
             <UserMenu currentUser={currentUser} />
           </div>
         </Container>

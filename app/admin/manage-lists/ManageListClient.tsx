@@ -80,7 +80,12 @@ const ManageListClient: React.FC<ManageListClientProps> = ({ playList }) => {
       renderCell: (params) => {
         return (
           <div className="flex justify-between gap-4 w-full my-2">
-            <ActionBtn icon={MdRefresh} onClick={() => {}} />
+            <ActionBtn
+              icon={MdRefresh}
+              onClick={() => {
+                router.push(`/updateList/${params.row.id}`);
+              }}
+            />
             <ActionBtn
               icon={MdDelete}
               onClick={() => {

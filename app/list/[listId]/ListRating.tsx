@@ -10,7 +10,6 @@ const ListRating: React.FC<ListRatingProps> = ({ list }) => {
   if (list.reviews.length === 0) return null;
   return (
     <div className="">
-      add rating to be done
       <Heading title="Music Reviews" />
       <div className="text-sm mt-2">
         {list.reviews &&

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { AiFillHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 import { truncateText } from "../utils/trancateText";
 import { useRouter } from "next/navigation";
@@ -18,12 +18,12 @@ const MusicCard: React.FC<MusicCardProps> = ({ list }) => {
         router.push(`list/${list.id}`);
       }}
     >
-      <div className="flex flex-col w-full  gap-2">
+      <div className="flex flex-col w-full  gap-2 items-center">
         <div className="aspect-square overflow-hidden relative w-full mb-4">
           <Image
             fill
-            src={list.images[0].url}
-            alt={list.name}
+            src={list.images[0]}
+            alt={list.title}
             className="w-full h-full object-contain"
           />
         </div>
@@ -43,14 +43,6 @@ const MusicCard: React.FC<MusicCardProps> = ({ list }) => {
             <span className="font-semibold">{list.reviews.length} </span>
             review(s)
             <span></span>
-          </div>
-          <div className="flex gap-2 items-center justify-self-end">
-            {/* //if the current user likes the list before make the heart red
-          otherwiese empty heart */}
-            <span className="text-2xl text-slate-400">
-              <AiFillHeart style={{ color: "red" }} />
-            </span>
-            <span>{list.likes}</span>
           </div>
         </div>
       </div>

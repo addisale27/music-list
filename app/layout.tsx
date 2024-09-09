@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Poppins } from "next/font/google"; // Correct this line
+import { Redressed } from "next/font/google"; // Correct this line
 import NavBar from "./components/NavBar/NavBar";
 import { Toaster } from "react-hot-toast";
 
 // Fix the variable name to be consistent
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700"] });
+const poppins = Redressed({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
   title: "Music List App",
@@ -28,9 +28,9 @@ export default function RootLayout({
           position="top-center"
           reverseOrder={false}
         />
-        <div>
+        <div className="flex flex-col">
           <NavBar />
-          <main>{children}</main>
+          <main className="flex-grow">{children}</main>
         </div>
       </body>
     </html>
