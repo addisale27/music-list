@@ -7,9 +7,8 @@ export interface IParams {
 export default async function getAllMusicLists(params: IParams) {
   try {
     const { searchTerm } = params;
-
-    // Ensure searchString is always a string
-    const searchString: string | null = searchTerm ?? "";
+    // Provide a default empty string if searchTerm is null or undefined
+    const searchString: string | undefined = searchTerm ?? undefined;
 
     const playLists = await prisma.playList.findMany({
       where: {
@@ -42,7 +41,6 @@ export default async function getAllMusicLists(params: IParams) {
 
     return playLists; // Return the result
   } catch (error) {
-    console.error("Error fetching playlists:", error); // Log the error
-    throw new Error("Error fetching playlists"); // Throw the error to indicate failure
+    console.error("Error fetching playlists...:", error); // Log the error
   }
 }
