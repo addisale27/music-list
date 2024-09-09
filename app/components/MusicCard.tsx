@@ -1,14 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 import { truncateText } from "../utils/trancateText";
 import { useRouter } from "next/navigation";
+import { Review } from "@prisma/client";
 
 interface MusicCardProps {
-  list: any;
+  list: PlayList;
 }
+interface PlayList {
+  id: string;
+  title: string;
+  album: string;
+  genre: string;
+  releasedYear: string;
+  images: string[];
+  reviews: Review[]; // Adjust type based on your review structure
+}
+
 const MusicCard: React.FC<MusicCardProps> = ({ list }) => {
   const router = useRouter();
   return (

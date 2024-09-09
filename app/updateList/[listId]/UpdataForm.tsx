@@ -20,15 +20,12 @@ interface UpdataFormProps {
 const UpdateForm: React.FC<UpdataFormProps> = ({ playList }) => {
   const [isLoading, setLoading] = useState(false);
   const [playListUpdated, setPlayListUpdated] = useState(false);
-  const [playListImages, setPlayListImages] = useState<string[]>(
-    playList.images
-  );
+
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const router = useRouter();
   const {
     register,
 
-    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<FieldValues>({
@@ -52,7 +49,7 @@ const UpdateForm: React.FC<UpdataFormProps> = ({ playList }) => {
       const imageUrls =
         selectedImages.length > 0
           ? await uploadImagesToFirebase(selectedImages)
-          : playListImages;
+          : playList.images;
 
       if (imageUrls.length === 0) {
         setLoading(false);

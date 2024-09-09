@@ -18,7 +18,14 @@ import { CircularProgress } from "@mui/material";
 interface ManageListClientProps {
   playList: PlayList[];
 }
-
+interface PlaylistRow {
+  id: string;
+  title: string;
+  album: string;
+  genre: string;
+  releasedYear: string;
+  images: string[];
+}
 const ManageListClient: React.FC<ManageListClientProps> = ({ playList }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +60,7 @@ const ManageListClient: React.FC<ManageListClientProps> = ({ playList }) => {
     }
   };
 
-  let rows: any = [];
+  let rows: PlaylistRow[] = [];
   if (playList) {
     rows = playList.map((list) => {
       return {

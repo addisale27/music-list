@@ -5,7 +5,6 @@ import ListRating from "./ListRating";
 import { getPlayListById } from "@/actions/getPlayListById";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import NullData from "@/app/components/NullData";
-import AddList from "@/app/admin/add-list/page";
 import AddRating from "./AddRating";
 
 interface IPrams {

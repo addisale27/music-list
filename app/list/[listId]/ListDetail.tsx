@@ -1,4 +1,5 @@
 "use client";
+
 import { Rating } from "@mui/material";
 import ListImage from "./ListImage";
 import { useState } from "react";
@@ -10,12 +11,12 @@ import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@/app/utils/firebaseConfig";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { AiOutlineHeart } from "react-icons/ai";
 
 interface ListDetailsProps {
   list: ListType;
   isOwner: boolean;
 }
+
 export type ListType = {
   id: string;
   title: string;
@@ -26,9 +27,9 @@ export type ListType = {
   selectedImage: string;
   description: string;
   images: string[];
-  reviews: Review[] & {
+  reviews: (Review & {
     user: User;
-  };
+  })[];
 };
 
 const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
@@ -37,9 +38,11 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
       (acc: number, review: Review) => (acc += review.rating),
       0
     ) / list.reviews.length;
+
   const Horizontal = () => {
     return <hr className="w-[30%] my-2" />;
   };
+
   const [listState, setListState] = useState<Partial<ListType>>({
     id: list.id,
     title: list.title,
@@ -48,14 +51,18 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
     genre: list.genre,
     releasedYear: list.releasedYear,
     selectedImage: list.images[0],
+    images: list.images, // Ensure images are included in state
   });
+
   const handleImageChange = (value: string) => {
     setListState((prev) => {
       return { ...prev, selectedImage: value };
     });
   };
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
   const handleImageDelete = async (images: string[]) => {
     try {
       setIsLoading(true);
@@ -70,12 +77,13 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
       setIsLoading(false);
     }
   };
+
   const handleDeleteList = async (id: string, images: string[]) => {
     toast("Deleting playlist, please wait...", { id: "deleting" });
     try {
       setIsLoading(true);
       await handleImageDelete(images);
-      console.log("image deleted from firebase");
+      console.log("Image deleted from Firebase");
       await axios.delete(`/api/create/${id}`);
       toast.success("PlayList has been deleted", { id: "deleted" });
       router.push("/");
@@ -91,36 +99,36 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
       <ListImage
         list={list}
-        listState={listState}
+        listState={listState as ListType} // Ensure type consistency here
         handleImageChange={handleImageChange}
       />
       <div className="flex flex-col gap-1 text-slate-500 text-md">
         <h2 className="font-bold text-3xl text-slate-700">{list.title}</h2>
         <Horizontal />
         <div className="flex gap-2 items-start max-w-[600px]">
-          <span className="font-semibold text-xl col-span-2 ">
+          <span className="font-semibold text-xl col-span-2">
             Description:{" "}
           </span>
           <span className="col-span-5">{list.description}</span>
         </div>
         <Horizontal />
         <div className="flex gap-2 items-center">
-          <span className="font-semibold text-xl ">Artist: </span>
+          <span className="font-semibold text-xl">Artist: </span>
           <span>{list.artist}</span>
         </div>
         <Horizontal />
         <div className="flex gap-2 items-center">
-          <span className="font-semibold text-xl ">Album: </span>
+          <span className="font-semibold text-xl">Album: </span>
           <span>{list.album}</span>
         </div>
         <Horizontal />
         <div className="flex gap-2 items-center">
-          <span className="font-semibold text-xl ">Genre: </span>
+          <span className="font-semibold text-xl">Genre: </span>
           <span>{list.genre}</span>
         </div>
         <Horizontal />
         <div className="flex gap-2 items-center">
-          <span className="font-semibold text-xl ">Year: </span>
+          <span className="font-semibold text-xl">Year: </span>
           <span>{list.releasedYear}</span>
         </div>
         <Horizontal />
@@ -131,8 +139,9 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
         </div>
         <Horizontal />
         {isOwner && (
-          <div className=" max-w-[400px] flex gap-4">
+          <div className="max-w-[400px] flex gap-4">
             <Button
+              disabled={isLoading}
               icon={MdRefresh}
               label="Edit"
               small
@@ -145,7 +154,10 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
               label="Delete"
               small
               onClick={() => {
-                handleDeleteList(listState.id, listState.images);
+                handleDeleteList(
+                  listState.id || "", // Ensure id is always a string
+                  listState.images || [] // Ensure images is always an array
+                );
               }}
             />
           </div>

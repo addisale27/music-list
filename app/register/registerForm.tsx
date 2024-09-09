@@ -57,7 +57,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
           }
         });
       })
-      .catch((err) => toast.error("something went wrong", { id: "wrong" }))
+      .catch((err) => {
+        toast.error("something went wrong", { id: "wrong" });
+        console.log(err);
+      })
       .finally(() => {
         setIsLoading(false);
       });

@@ -19,6 +19,7 @@ interface AddRatingProps {
   };
   user: SafeUser;
 }
+
 const AddRating: React.FC<AddRatingProps> = ({ list, user }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -34,7 +35,7 @@ const AddRating: React.FC<AddRatingProps> = ({ list, user }) => {
       rating: "0",
     },
   });
-  const setCustomValue = (id: string, value: any) => {
+  const setCustomValue = (id: string, value: number | null) => {
     setValue(id, value, {
       shouldTouch: true,
       shouldDirty: true,

@@ -1,10 +1,9 @@
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import Container from "../components/Container";
-import Display from "./Display";
+
 import NullData from "../components/NullData";
 import { getYourOwnPlayList } from "@/actions/getYourOwnPlayLists";
 import MusicCard from "../components/MusicCard";
-
 const YourPlayLists = async () => {
   const currentUser = await getCurrentUser();
   if (!currentUser) return <NullData title="Please sign in first" />;
