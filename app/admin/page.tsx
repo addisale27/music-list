@@ -7,7 +7,7 @@ import Container from "../components/Container";
 
 const AdminPage = async () => {
   const currentUser = await getCurrentUser();
-  if (!currentUser) return <NullData title="Please sign up first" />;
+  if (!currentUser) return <NullData title="Please! sign up first" />;
   const playList = await getYourOwnPlayList(currentUser?.id);
 
   return (

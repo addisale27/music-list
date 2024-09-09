@@ -1,5 +1,5 @@
 import prisma from "@/libs/prismadb";
-import { PlayList, Review, User } from "@prisma/client"; // Import the necessary types
+import { PlayList, Review, User } from "@prisma/client";
 
 export interface IParams {
   searchTerm?: string | null;
@@ -10,7 +10,8 @@ export default async function getAllMusicLists(
 ): Promise<(PlayList & { reviews: (Review & { user: User })[] })[]> {
   try {
     const { searchTerm } = params;
-    let searchString = searchTerm ?? ""; // Default to an empty string if searchTerm is undefined or null
+    // Ensure searchString is a string
+    const searchString: string = searchTerm || "";
 
     const playLists = await prisma.playList.findMany({
       where: {
@@ -43,7 +44,7 @@ export default async function getAllMusicLists(
 
     return playLists; // Return the result
   } catch (error) {
-    console.error("Error fetching playlists:", error); // Log the error
+    console.error("Error while fetching playlists:", error); // Log the error
     throw error; // Re-throw the error for further handling
   }
 }
