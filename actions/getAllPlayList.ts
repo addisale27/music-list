@@ -46,6 +46,5 @@ export default async function getAllMusicLists(params: IParams) {
     return playLists; // Return the result
   } catch (error) {
     console.error("Error fetching playlists:", error); // Log the error
-    throw new Error("Could not fetch playlists"); // Optional: Throw an error for higher-level handling
   }
 }

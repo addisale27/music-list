@@ -93,6 +93,7 @@ const AddRating: React.FC<AddRatingProps> = ({ list, user }) => {
         required
       />
       <Button
+        disabled={isLoading}
         label={isLoading ? `Loading` : `Rate PlayList`}
         onClick={handleSubmit(onSubmit)}
       />

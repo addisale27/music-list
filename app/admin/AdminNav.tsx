@@ -8,6 +8,7 @@ import {
   MdLibraryAdd,
 } from "react-icons/md";
 import Container from "../components/Container";
+import { getCurrentUser } from "@/actions/getCurrentUser";
 
 const AdminNav = () => {
   const pathName = usePathname();
