@@ -1,28 +1,38 @@
 import prisma from "@/libs/prismadb";
-import { SafeUser } from "@/types";
+import { PlayList, Review, Role } from "@prisma/client";
 
-import { PlayList, Review } from "@prisma/client";
-
-// Define types for Reviews and Playlists
-interface PlayLists {
-  playList: PlayList & {
-    review: Review[] & {
-      user: SafeUser[];
-    };
-  };
+// Define the type for SafeUser, assuming it includes the fields Prisma returns for the user
+interface SafeUser {
+  id: string;
+  name: string | null;
+  email: string | null;
+  emailVerified: Date | null;
+  image: string | null;
+  hashedPassword: string | null;
+  role: Role;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+// Extend the PlayList and Review types from Prisma to include the SafeUser type for reviews
+interface ExtendedReview extends Review {
+  user: SafeUser;
+}
+
+interface ExtendedPlayList extends PlayList {
+  reviews: ExtendedReview[];
+}
+
 export interface IParams {
   searchTerm?: string;
 }
 
 export default async function getAllMusicLists(
   params: IParams
-): Promise<PlayLists[] | null> {
+): Promise<ExtendedPlayList[] | null> {
   try {
     const { searchTerm } = params;
-    let searchString: string | undefined = searchTerm;
-    if (!searchTerm) searchString = "";
-    // const searchString: string | undefined = searchTerm ?? undefined;
+    const searchString: string = searchTerm ?? "";
 
     const playLists = await prisma.playList.findMany({
       where: {
@@ -44,7 +54,7 @@ export default async function getAllMusicLists(
       include: {
         reviews: {
           include: {
-            user: true,
+            user: true, // Includes all fields related to the user
           },
           orderBy: {
             createdDate: "desc",
@@ -53,7 +63,7 @@ export default async function getAllMusicLists(
       },
     });
 
-    return playLists;
+    return playLists as ExtendedPlayList[];
   } catch (error) {
     console.error("Error fetching playlists:", error);
     return null; // Return null in case of an error
