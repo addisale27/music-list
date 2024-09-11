@@ -1,14 +1,28 @@
 import prisma from "@/libs/prismadb";
+import { SafeUser } from "@/types";
 
+import { PlayList, Review } from "@prisma/client";
+
+// Define types for Reviews and Playlists
+interface PlayLists {
+  playList: PlayList & {
+    review: Review[] & {
+      user: SafeUser[];
+    };
+  };
+}
 export interface IParams {
-  searchTerm?: string | null;
+  searchTerm?: string;
 }
 
-export default async function getAllMusicLists(params: IParams) {
+export default async function getAllMusicLists(
+  params: IParams
+): Promise<PlayLists[] | null> {
   try {
     const { searchTerm } = params;
-    // Provide a default empty string if searchTerm is null or undefined
-    const searchString: string | undefined = searchTerm ?? undefined;
+    let searchString: string | undefined = searchTerm;
+    if (!searchTerm) searchString = "";
+    // const searchString: string | undefined = searchTerm ?? undefined;
 
     const playLists = await prisma.playList.findMany({
       where: {
@@ -39,8 +53,9 @@ export default async function getAllMusicLists(params: IParams) {
       },
     });
 
-    return playLists; // Return the result
+    return playLists;
   } catch (error) {
-    console.error("Error fetching playlists...:", error); // Log the error
+    console.error("Error fetching playlists:", error);
+    return null; // Return null in case of an error
   }
 }
