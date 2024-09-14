@@ -24,6 +24,19 @@ export type ListType = {
   genre: string;
   artist: string;
   releasedYear: string;
+  description: string;
+  images: string[];
+  reviews: (Review & {
+    user: User;
+  })[];
+};
+export type ListStateType = {
+  id: string;
+  title: string;
+  album: string;
+  genre: string;
+  artist: string;
+  releasedYear: string;
   selectedImage: string;
   description: string;
   images: string[];
@@ -43,7 +56,7 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
     return <hr className="w-[30%] my-2" />;
   };
 
-  const [listState, setListState] = useState<Partial<ListType>>({
+  const [listState, setListState] = useState<Partial<ListStateType>>({
     id: list.id,
     title: list.title,
     artist: list.artist,

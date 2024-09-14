@@ -17,18 +17,18 @@ interface Review {
   createdDate: string;
 }
 
-interface ListType {
+export type ListType = {
   id: string;
   title: string;
   album: string;
   genre: string;
   artist: string;
   releasedYear: string;
-  selectedImage: string;
+
   description: string;
   images: string[];
-  reviews: Review[];
-}
+  reviews: (Review & { user: User })[]; // Adjusted type to include nested user
+};
 
 interface ListRatingProps {
   list: ListType;

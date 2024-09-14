@@ -1,13 +1,12 @@
-"use client";
-
 import Image from "next/image";
-import { ListType } from "./ListDetail";
+import { ListStateType, ListType } from "./ListDetail";
 
 interface ListImageProps {
   list: ListType;
-  listState: Partial<ListType>;
+  listState: Partial<ListStateType>;
   handleImageChange: (value: string) => void;
 }
+
 const ListImage: React.FC<ListImageProps> = ({
   list,
   listState,
@@ -18,8 +17,8 @@ const ListImage: React.FC<ListImageProps> = ({
       <div className="row-span-4 relative w-full ">
         <Image
           fill
-          src={listState.selectedImage}
-          alt={listState.title}
+          src={listState.selectedImage ?? "/default-placeholder.png"} // Add a fallback image
+          alt={listState.title ?? "Default Title"}
           className="w-full h-full object-contain  max-h-[400px] min-h-[200px] sm:min-h-[300px]"
           quality={100}
         />
@@ -38,7 +37,7 @@ const ListImage: React.FC<ListImageProps> = ({
             >
               <Image
                 fill
-                src={image}
+                src={image ?? "/default-placeholder.png"} // Add a fallback image
                 alt="images"
                 className="w-full h-full object-contain"
               />

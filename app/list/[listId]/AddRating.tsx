@@ -17,7 +17,7 @@ interface AddRatingProps {
   list: PlayList & {
     reviews: Review[];
   };
-  user: SafeUser;
+  user: SafeUser | null;
 }
 
 const AddRating: React.FC<AddRatingProps> = ({ list, user }) => {
