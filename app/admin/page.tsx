@@ -9,7 +9,9 @@ const AdminPage = async () => {
   const currentUser = await getCurrentUser();
   if (!currentUser) return <NullData title="Please! sign up first" />;
   const playList = await getYourOwnPlayList(currentUser?.id);
-
+  if (!playList || !Array.isArray(playList)) {
+    return <NullData title="No playlists available" />;
+  }
   return (
     <div className="p-8">
       <Container>
