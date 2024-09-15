@@ -18,7 +18,9 @@ const ListPage = async ({ params }: { params: IPrams }) => {
       <Container>
         <ListDetail list={list} isOwner={isOwner} />
         <div className="flex flex-col mt-20 gap-4">
-          <AddRating list={list} user={currentUser || null} />
+          {currentUser ? (
+            <AddRating list={list} user={currentUser || null} />
+          ) : null}
           <ListRating list={list} />
         </div>
       </Container>

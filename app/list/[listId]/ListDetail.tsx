@@ -1,3 +1,5 @@
+"use state";
+
 import { Rating } from "@mui/material";
 import ListImage from "./ListImage";
 import { useState } from "react";
