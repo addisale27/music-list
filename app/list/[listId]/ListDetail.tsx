@@ -1,22 +1,19 @@
-"use client";
-
 import { Rating } from "@mui/material";
 import ListImage from "./ListImage";
 import { useState } from "react";
 import Button from "@/app/components/Button";
 import { MdDelete, MdRefresh } from "react-icons/md";
-import { Review, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@/app/utils/firebaseConfig";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { Review } from "@prisma/client";
 
-interface ListDetailsProps {
-  list: ListType;
-  isOwner: boolean;
-}
+// Assuming SafeUser includes fields like `id`, `name`, etc.
+import { SafeUser } from "@/types";
 
+// Align the type with the `PlayListWithReviews` interface
 export type ListType = {
   id: string;
   title: string;
@@ -26,10 +23,13 @@ export type ListType = {
   releasedYear: string;
   description: string;
   images: string[];
+  userId: string; // Include userId if it exists
   reviews: (Review & {
-    user: User;
+    user: SafeUser; // Align with SafeUser
   })[];
 };
+
+// Ensure `ListStateType` aligns with `ListType`
 export type ListStateType = {
   id: string;
   title: string;
@@ -41,16 +41,19 @@ export type ListStateType = {
   description: string;
   images: string[];
   reviews: (Review & {
-    user: User;
+    user: SafeUser;
   })[];
 };
 
+interface ListDetailsProps {
+  list: ListType; // Ensure this type is consistent with your data
+  isOwner: boolean;
+}
+
 const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
   const rating =
-    list.reviews.reduce(
-      (acc: number, review: Review) => (acc += review.rating),
-      0
-    ) / list.reviews.length;
+    list.reviews.reduce((acc: number, review) => (acc += review.rating), 0) /
+    list.reviews.length;
 
   const Horizontal = () => {
     return <hr className="w-[30%] my-2" />;
@@ -64,13 +67,14 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
     genre: list.genre,
     releasedYear: list.releasedYear,
     selectedImage: list.images[0],
-    images: list.images, // Ensure images are included in state
+    images: list.images,
   });
 
   const handleImageChange = (value: string) => {
-    setListState((prev) => {
-      return { ...prev, selectedImage: value };
-    });
+    setListState((prev) => ({
+      ...prev,
+      selectedImage: value,
+    }));
   };
 
   const router = useRouter();
@@ -86,7 +90,7 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setIsLoading(false);
     }
   };
@@ -102,7 +106,7 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
       router.push("/");
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setIsLoading(false);
       toast.error("Something went wrong");
     }
@@ -112,7 +116,7 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
       <ListImage
         list={list}
-        listState={listState as ListType} // Ensure type consistency here
+        listState={listState as ListType}
         handleImageChange={handleImageChange}
       />
       <div className="flex flex-col gap-1 text-slate-500 text-md">
@@ -145,7 +149,6 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
           <span>{list.releasedYear}</span>
         </div>
         <Horizontal />
-
         <div className="flex items-center gap-2">
           <Rating value={rating} readOnly />
           <span>{list.reviews.length} reviews</span>
@@ -167,10 +170,7 @@ const ListDetail: React.FC<ListDetailsProps> = ({ list, isOwner }) => {
               label="Delete"
               small
               onClick={() => {
-                handleDeleteList(
-                  listState.id || "", // Ensure id is always a string
-                  listState.images || [] // Ensure images is always an array
-                );
+                handleDeleteList(listState.id || "", listState.images || []);
               }}
             />
           </div>

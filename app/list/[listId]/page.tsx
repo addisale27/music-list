@@ -1,24 +1,18 @@
+import { getPlayListById } from "@/actions/getPlayListById";
 import Container from "@/app/components/Container";
 import ListDetail from "./ListDetail";
-import ListRating from "./ListRating";
-import { getPlayListById } from "@/actions/getPlayListById";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import NullData from "@/app/components/NullData";
+import ListRating from "./ListRating";
 import AddRating from "./AddRating";
-
-interface IParams {
+interface IPrams {
   listId: string;
 }
-
-const ListPage = async ({ params }: { params: IParams }) => {
+const ListPage = async ({ params }: { params: IPrams }) => {
   const list = await getPlayListById(params.listId);
-  if (!list) return <NullData title="No Playlist found" />;
-
   const currentUser = await getCurrentUser();
-
-  // Type guard to handle cases where `currentUser` might be null
-  const isOwner = currentUser ? currentUser.id === list.userId : false;
-
+  const isOwner = currentUser ? currentUser.id === list?.userId : false;
+  if (!list) return <NullData title="No listing available" />;
   return (
     <div className="p-8">
       <Container>
